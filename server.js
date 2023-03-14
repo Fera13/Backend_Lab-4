@@ -10,6 +10,11 @@ app.set('view-engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
+app.use( (req, res, next) => {
+	console.log(`${req.method}  ${req.url}  `, req.body)
+	next()
+} )
+
 var currentKey = ""
 var currentPassword = ""
 
