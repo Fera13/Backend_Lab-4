@@ -38,14 +38,81 @@ function authenticateToken(req, res, next) {
   if (currentKey == "") {
     res.redirect("/identify")
   } else if (jwt.verify(currentKey, process.env.ACCESS_TOKEN_SECRET)) {
+    //if it's in db as an admin next
+    //else send 401
     next()
   } else {
-    res.redirect("/identify")
+    res.status(401).redirect("/identify")
   }
 }
 
 app.get('/granted', authenticateToken, (req, res) => {
   res.render('start.ejs')
+})
+
+//
+function authenticateAdminToken(req, res, next) {
+  if (currentKey == "") {
+    res.redirect("/identify")
+  } else if (jwt.verify(currentKey, process.env.ACCESS_TOKEN_SECRET)) {
+    //if it's in db as an admin next
+    //else send 401
+    next()
+  } else {
+    res.status(401).redirect("/identify")
+  }
+}
+//
+app.get('/admin', authenticateAdminToken, (req, res) => {
+  res.render('admin.ejs')
+})
+
+function authenticateStud1Token(req, res, next) {
+  if (currentKey == "") {
+    res.redirect("/identify")
+  } else if (jwt.verify(currentKey, process.env.ACCESS_TOKEN_SECRET)) {
+    //if it's in db as an admin, teacher, student1 then do next
+    //else send 401
+    next()
+  } else {
+    res.status(401).redirect("/identify")
+  }
+}
+
+app.get('/student1', authenticateStud1Token, (req, res) => {
+  res.render('student1.ejs')
+})
+
+function authenticateStud2Token(req, res, next) {
+  if (currentKey == "") {
+    res.redirect("/identify")
+  } else if (jwt.verify(currentKey, process.env.ACCESS_TOKEN_SECRET)) {
+    //if it's in db as an admin, teacher, student2 then do next
+    //else send 401
+    next()
+  } else {
+    res.status(401).redirect("/identify")
+  }
+}
+
+app.get('/student2', authenticateStud2Token, (req, res) => {
+  res.render('student2.ejs')
+})
+
+function authenticateTeacherToken(req, res, next) {
+  if (currentKey == "") {
+    res.redirect("/identify")
+  } else if (jwt.verify(currentKey, process.env.ACCESS_TOKEN_SECRET)) {
+    //if it's in db as an admin, teacher then do next
+    //else send 401
+    next()
+  } else {
+    res.status(401).redirect("/identify")
+  }
+}
+
+app.get('/teacher', authenticateTeacherToken, (req, res) => {
+  res.render('teacher.ejs')
 })
 
 app.listen(8000)
