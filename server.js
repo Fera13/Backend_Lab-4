@@ -26,7 +26,12 @@ app.get('/identify', (req, res) => {
   res.render('identify.ejs')
 })
 
-app.get('/granted', (req, res) => {
+function authenticateToken(req, res, next) {
+  console.log("we are in the authentication controll function")
+  next()
+}
+
+app.get('/granted', authenticateToken, (req, res) => {
   res.render('start.ejs')
 })
 
