@@ -2,7 +2,10 @@ const express = require('express')
 const app = express()
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
+const bcrypt = require('bcryptjs')
+const staticPath = '/views'
 
+app.use( express.static(staticPath) )
 app.set('view-engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
@@ -27,8 +30,13 @@ app.get('/identify', (req, res) => {
 })
 
 function authenticateToken(req, res, next) {
-  console.log("we are in the authentication controll function")
-  next()
+  if (currentKey == "") {
+    res.redirect("/identify")
+  } else if (jwt.verify(currentKey, process.env.ACCESS_TOKEN_SECRET)) {
+    next()
+  } else {
+    res.redirect("/identify")
+  }
 }
 
 app.get('/granted', authenticateToken, (req, res) => {
@@ -37,13 +45,5 @@ app.get('/granted', authenticateToken, (req, res) => {
 
 app.listen(8000)
 
-const bcrypt = require('bcryptjs')
-const {getPass, insertUser, checkIfUserExists} = require("./database.js")
-const staticPath = '/views'
-const port = 5000
 
-app.use( (req, res, next) => {
-	console.log(`${req.method}  ${req.url}  `, req.body)
-	next()
-} )
-app.use( express.static(staticPath) )
+//const {getPass, insertUser, checkIfUserExists} = require("./database.js")
