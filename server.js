@@ -179,7 +179,7 @@ app.get("/users/:userid", authenticateToken, async (req, res) => {
   } else if (user.role === "admin") {
     res.render("admin.ejs");
   } else if (user.role === "student") {
-    res.render("welcome.ejs", { user: user });
+    res.render("student.ejs", { user: user });
   }
 });
 
