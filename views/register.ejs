@@ -1,54 +1,24 @@
-<link href="style.css" rel="stylesheet" type="text/css">
 <h1>Register</h1>
+<form action="/register" method="POST">
   <div>
-    <label for="id">ID</label>
-    <input type="text" id="id" name="id" required>
+    <label for="id">User id</label>
+    <input type="text" id="id" name="id" required />
   </div>
   <div>
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" required>
+    <label for="name">Username</label>
+    <input type="text" id="name" name="name" required />
   </div>
   <div>
     <label for="password">Password</label>
-    <input type="password" id="password" name="password" required>
+    <input type="password" id="password" name="password" required />
   </div>
   <div>
     <label for="role">Role</label>
-    <input type="text" id="role" name="role" required>
+    <select name="role" id="role">
+      <option value="teacher">Teacher</option>
+      <option value="student">Student</option>
+    </select>
   </div>
-  <button id="btnRegister" type="submit">Register</button>
-  <section>
-    <label id="fill"> </label>
-  </section>
-  <script>
-    const inputId = document.querySelector('#id')
-    const inputUsername = document.querySelector('#name')
-    const inputPassword = document.querySelector('#password')
-    const inputRole = document.querySelector('#role')
-    const btnRegister = document.querySelector('#btnRegister')
-
-    btnRegister.addEventListener('click', async () => {
-      const packet = {
-        id: inputId.value,
-        username: inputUsername.value,
-        password: inputPassword.value,
-        role: inputRole.value
-      }
-
-      const url = '/REGISTER'
-      console.log("hi")
-      const options = {
-        method: 'POST',
-        body: JSON.stringify(packet),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-
-      console.log('About to send packet: ', options)
-
-      const response = await fetch(url, options)
-    })
-  </script>
+  <button type="submit">Register</button>
 </form>
-<a href="/LOGIN">LOGIN</a>
+<a href="/identify">LOGIN</a>
