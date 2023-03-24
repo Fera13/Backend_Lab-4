@@ -22,14 +22,14 @@ db.serialize(() => {
     }
   );
   db.run(
-    `INSERT INTO Users (userID, role, name, password) VALUES ('id1', 'student', 'user1', '$2a$10$ZFhawM/K8p8PFS2z5CEjkuzi3hgIG4qAmuXSJgGV2TT9Ov1B3q0Zm');`,
+    `INSERT INTO Users (userID, role, name, password) VALUES ('id1', 'student1', 'user1', '$2a$10$ZFhawM/K8p8PFS2z5CEjkuzi3hgIG4qAmuXSJgGV2TT9Ov1B3q0Zm');`,
     {},
     (error) => {
       errors++;
     }
   );
   db.run(
-    `INSERT INTO Users (userID, role, name, password) VALUES ('id2', 'student', 'user2', '$2a$10$22tDDxFqUpQrA6m4UsrBZeAMtsWW6/6BBfFA2AZyq7sMwV89CPoiW'); `,
+    `INSERT INTO Users (userID, role, name, password) VALUES ('id2', 'student2', 'user2', '$2a$10$22tDDxFqUpQrA6m4UsrBZeAMtsWW6/6BBfFA2AZyq7sMwV89CPoiW'); `,
     {},
     (error) => {
       errors++;

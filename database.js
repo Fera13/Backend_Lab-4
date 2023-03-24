@@ -54,4 +54,17 @@ async function getPass(id) {
   });
 }
 
-module.exports = { getPass, insertUser, checkIfUserExists };
+async function getAllUsers() {
+  return new Promise((resolve, reject) => {
+    db.all("SELECT * FROM Users", (error, rows) => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log(rows);
+        resolve(rows);
+      }
+    });
+  });
+}
+
+module.exports = { getPass, insertUser, checkIfUserExists, getAllUsers };

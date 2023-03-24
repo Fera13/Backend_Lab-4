@@ -4,7 +4,12 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const staticPath = "/views";
-const { getPass, insertUser, checkIfUserExists } = require("./database.js");
+const {
+  getPass,
+  insertUser,
+  checkIfUserExists,
+  getAllUsers,
+} = require("./database.js");
 const cookieParser = require("cookie-parser");
 
 app.use(express.static(staticPath));
@@ -27,7 +32,6 @@ app.post("/identify", async (req, res) => {
   const password = req.body.password;
   let userObj = { id: id, password: password };
   const userInfo = await getPass(id);
-  console.log("database info", userInfo);
   if (!userInfo) {
     res.status(401).render("fail.ejs");
     return;
@@ -102,9 +106,9 @@ app.post("/REGISTER", async (req, res) => {
 function rightRoleToAccess(roleObject) {
   return async (req, res, next) => {
     try {
-      const roleCheck = req.body.role;
-      console.log(roleCheck);
-      if (roleObject.includes(roleCheck)) {
+      const user = await getUserWithTheToken(req);
+      console.log(user);
+      if (roleObject.includes(user.role)) {
         next();
       } else {
         res.sendStatus(401);
@@ -119,17 +123,17 @@ function rightRoleToAccess(roleObject) {
 app.get(
   "/admin",
   authenticateToken,
-  rightRoleToAccess(["ADMIN"]),
+  rightRoleToAccess(["admin"]),
   async (req, res) => {
-    const user = await getUserWithTheToken(req);
-    res.render("admin.ejs", { user: user });
+    const users = await getAllUsers();
+    res.render("admin.ejs", { users: users });
   }
 );
 
 app.get(
   "/student1",
   authenticateToken,
-  rightRoleToAccess(["ADMIN", "STUDENT1", "TEACHER"]),
+  rightRoleToAccess(["admin", "student1", "teacher"]),
   async (req, res) => {
     const user = await getUserWithTheToken(req);
     res.render("student1.ejs", { user: user });
@@ -139,7 +143,7 @@ app.get(
 app.get(
   "/student2",
   authenticateToken,
-  rightRoleToAccess(["ADMIN", "STUDENT2", "TEACHER"]),
+  rightRoleToAccess(["admin", "student2", "teacher"]),
   async (req, res) => {
     const user = await getUserWithTheToken(req);
     res.render("student2.ejs", { user: user });
@@ -149,17 +153,41 @@ app.get(
 app.get(
   "/teacher",
   authenticateToken,
-  rightRoleToAccess(["ADMIN", "TEACHER"]),
+  rightRoleToAccess(["admin", "teacher"]),
   async (req, res) => {
     const user = await getUserWithTheToken(req);
     res.render("teacher.ejs", { user: user });
   }
 );
 
+app.get("/users/:userid", authenticateToken, async (req, res) => {
+  const id = req.params.userid;
+  const token = req.cookies.jwt;
+  const verifyToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+  console.log("this is token ", verifyToken);
+  const user = await getPass(verifyToken.id);
+
+  if (id !== verifyToken.id) {
+    return res.sendStatus(401);
+  }
+
+  if (user.role === "student1") {
+    res.render("student1.ejs");
+  } else if (user.role === "student2") {
+    res.render("student2.ejs", { user: user });
+  } else if (user.role === "teacher") {
+    res.render("teacher.ejs");
+  } else if (user.role === "admin") {
+    res.render("admin.ejs");
+  } else if (user.role === "student") {
+    res.render("welcome.ejs", { user: user });
+  }
+});
+
 function getUserWithTheToken(req) {
-  req.cookies.jwt;
+  const token = req.cookies.jwt;
   const decryptedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-  const user = getPass(decryptedToken.username);
+  const user = getPass(decryptedToken.id);
   return user;
 }
 
