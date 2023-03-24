@@ -173,13 +173,12 @@ app.get("/users/:userid", authenticateToken, async (req, res) => {
   if (user.role === "student1") {
     res.render("student1.ejs");
   } else if (user.role === "student2") {
-    res.render("student2.ejs");
+    res.render("student2.ejs", { user: user });
   } else if (user.role === "teacher") {
     res.render("teacher.ejs");
   } else if (user.role === "admin") {
-    res.render("admin.ejs");
-  } else if (user.role === "student") {
-    res.render("student.ejs", { user: user });
+    const users = await getAllUsers();
+    res.render("admin.ejs", { users: users });
   }
 });
 
@@ -196,6 +195,11 @@ function isValidPassword(pw) {
     return false;
   }
   return pw.length >= 8;
+}
+
+async function getUsers() {
+  const users = await getAllUsers();
+  return users;
 }
 
 app.listen(8000);
