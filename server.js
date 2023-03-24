@@ -50,7 +50,7 @@ app.post("/identify", async (req, res) => {
   };
 
   res.cookie("jwt", token, cookieOptions);
-  res.redirect("/granted");
+  res.redirect(`/users/${id}`);
 });
 
 app.get("/identify", (req, res) => {
@@ -170,11 +170,10 @@ app.get("/users/:userid", authenticateToken, async (req, res) => {
   if (id !== verifyToken.id) {
     return res.sendStatus(401);
   }
-
   if (user.role === "student1") {
     res.render("student1.ejs");
   } else if (user.role === "student2") {
-    res.render("student2.ejs", { user: user });
+    res.render("student2.ejs");
   } else if (user.role === "teacher") {
     res.render("teacher.ejs");
   } else if (user.role === "admin") {
