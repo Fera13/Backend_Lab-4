@@ -15,3 +15,8 @@ The specific dynamic routes can't be used by anyone but the owner but some roles
 The admin has an extra privilage of accessing the teachers' page but no one can access the admin's page except the admin.
 
 ## How to launch the application?
+
+1. The first step after cloning the github repository is to run the command "npm install" in the terminal. This will make sure that all the dependencies and libraries are properly installed.
+2. There is already a database that comes with the cloning but if it doesn't or if it gets deleted for any reason, you can create a databse by using "node init-db.js" in the terminal
+3. To run the server use "npm run runServer" and the server will run and start listening on port 8000
+4. Open "http://localhost:8000/" on your browser and you're ready to go.
